@@ -6,11 +6,9 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2];
-
 const url = `mongodb+srv://anta149:${password}@cluster0.2s6rywt.mongodb.net/noteApp?appName=Cluster0`;
 
 mongoose.set("strictQuery", false);
-
 mongoose.connect(url, { family: 4 });
 
 const noteSchema = new mongoose.Schema({
