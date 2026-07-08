@@ -1,0 +1,50 @@
+{
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "040-123456",
+      "id": "1"
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "id": "2"
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": "3"
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": "4"
+    },
+    {
+      "name": "Max Mustermann",
+      "number": "312654897",
+      "id": "8C_qhnpiuBA"
+    },
+    {
+      "name": "Lily Qoq",
+      "number": "97564123465",
+      "id": "CA3Wpu6lMkw"
+    },
+    {
+      "name": "Change Number",
+      "number": "555555",
+      "id": "TMdV73Sgahc"
+    },
+    {
+      "name": "Test Component Change",
+      "number": "123456",
+      "id": "FTEqQhhdOts"
+    },
+    {
+      "name": "Test Notification",
+      "number": "456",
+      "id": "JzY6CU7mUUg"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
