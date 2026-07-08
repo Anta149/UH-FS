@@ -21,13 +21,14 @@ app.use(
 
 // ------ API Routes --------
 app.get("/info", (request, response) => {
-  const entriesCount = persons.length;
   const currentDate = new Date();
 
-  response.send(`
-    <p>Phonebook has info for ${entriesCount} people</p>
+  Person.countDocuments({}).then((count) => {
+    response.send(`
+    <p>Phonebook has info for ${count} people</p>
     <p>${currentDate.toString()}</p>
   `);
+  });
 });
 
 app.get("/api/persons", (request, response) => {
@@ -36,10 +37,16 @@ app.get("/api/persons", (request, response) => {
   });
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  Person.findById(request.params.id).then((person) => {
-    response.json(person);
-  });
+app.get("/api/persons/:id", (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.post("/api/persons", (request, response) => {
