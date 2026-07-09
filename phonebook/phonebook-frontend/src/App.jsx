@@ -7,7 +7,6 @@ import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,13 +23,14 @@ const App = () => {
     const existingPerson = persons.find(
       (person) => person.name.toLowerCase() === newName.trim().toLowerCase(),
     );
-
+    // If name already exists ask to replace the number
     if (existingPerson) {
       if (
         window.confirm(
           `${newName} is already added to phonebook, replace the old number with a new one?`,
         )
       ) {
+        // use object spread to keep all data and only change number
         const changedPerson = { ...existingPerson, number: newNumber };
 
         personService
@@ -74,6 +74,7 @@ const App = () => {
   const deletePersonOf = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
       personService.remove(id).then(() => {
+        //set new person array state that only consists of ids not equal to deleted id
         setPersons(persons.filter((person) => person.id !== id));
       });
     }

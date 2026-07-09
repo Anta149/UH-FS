@@ -22,7 +22,7 @@ app.use(
 // ------ API Routes --------
 app.get("/info", (request, response) => {
   const currentDate = new Date();
-
+  // Show number of Documents and current Date
   Person.countDocuments({}).then((count) => {
     response.send(`
     <p>Phonebook has info for ${count} people</p>
@@ -32,6 +32,7 @@ app.get("/info", (request, response) => {
 });
 
 app.get("/api/persons", (request, response) => {
+  // find({}) returns all entries
   Person.find({}).then((persons) => {
     response.json(persons);
   });
