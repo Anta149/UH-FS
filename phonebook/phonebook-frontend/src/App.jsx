@@ -56,18 +56,26 @@ const App = () => {
         number: newNumber,
       };
 
-      personService.create(personObject).then((returnedPerson) => {
-        console.log(returnedPerson);
+      personService
+        .create(personObject)
+        .then((returnedPerson) => {
+          console.log(returnedPerson);
 
-        setPersons(persons.concat(returnedPerson));
+          setPersons(persons.concat(returnedPerson));
 
-        setNotificationMessage(`Added ${returnedPerson.name} to the Phonebook`);
-        setTimeout(() => {
-          setNotificationMessage(null);
-        }, 5000);
-        setNewName("");
-        setNewNumber("");
-      });
+          setNotificationMessage(
+            `Added ${returnedPerson.name} to the Phonebook`,
+          );
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 5000);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          console.log(error.response.data.error);
+          setNotificationMessage(error.response.data.error);
+        });
     }
   };
 
@@ -118,7 +126,7 @@ const App = () => {
       <h2>Numbers</h2>
       <Persons personsToShow={personsToShow} deletePersonOf={deletePersonOf} />
       <div>
-        debug: {newName} {newNumber} {searchTerm}
+        debug: {newName} {newNumber} {searchTerm} {notificationMessage}
       </div>
     </div>
   );
