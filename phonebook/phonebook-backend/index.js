@@ -106,6 +106,11 @@ app.delete("/api/persons/:id", (request, response, next) => {
 });
 
 //---- Error Handling
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+app.use(unknownEndpoint);
+
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
 
@@ -119,11 +124,6 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 app.use(errorHandler);
-
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" });
-};
-app.use(unknownEndpoint);
 
 // listen
 const PORT = process.env.PORT;
