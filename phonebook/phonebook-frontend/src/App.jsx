@@ -48,6 +48,10 @@ const App = () => {
             }, 5000);
             setNewName("");
             setNewNumber("");
+          })
+          .catch((error) => {
+            console.log(error.response.data.error);
+            setNotificationMessage(error.response.data.error);
           });
       }
     } else {
