@@ -1,0 +1,44 @@
+### 1. Create a brand new user account
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "root",
+  "name": "Super User",
+  "password": "secretpassword"
+}
+
+###
+
+### 2. Get all users (to verify the account was created and passwordHash is hidden)
+GET http://localhost:3003/api/users
+
+###
+
+### 3. Log in with the user account to retrieve your security token
+# @name login
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "secretpassword"
+}
+
+###
+
+### 4. Create a new blog post (Automated Token Version)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "title": "Automated Token Blog Post",
+  "author": "FSO Student",
+  "url": "https://fullstackopen.com/",
+  "likes": 10
+}
+###
+
+### 5. Get all blogs (to verify the blog is linked to the user account)
+GET http://localhost:3003/api/blogs
