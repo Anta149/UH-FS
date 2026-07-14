@@ -1,64 +1,79 @@
-import { useState, useEffect } from "react";
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
+import { useState, useEffect } from 'react'
+import Blog from './components/Blog'
+import blogService from './services/blogs'
+import loginService from './services/login'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [blogs, setBlogs] = useState([])
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    blogService.getAll().then((blogs) => setBlogs(blogs))
+  }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
     }
-  }, []);
+  }, [])
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const user = await loginService.login({ username, password });
-      blogService.setToken(user.token);
-      setUser(user);
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      setUsername("");
-      setPassword("");
+      const user = await loginService.login({ username, password })
+      blogService.setToken(user.token)
+      setUser(user)
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      setUsername('')
+      setPassword('')
     } catch {
-      console.log("wrong credentials");
+      console.log('wrong credentials')
     }
-  };
+  }
 
   const handleLogout = (event) => {
-    event.preventDefault;
-    window.localStorage.removeItem("loggedBlogappUser");
-    setUser(null);
-  };
+    event.preventDefault()
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+  }
 
   const handleCreateBlog = async (event) => {
-    event.preventDefault;
+    event.preventDefault() // Fixed with ()
+
     const createdBlog = {
       title: title,
       author: author,
       url: url,
-    };
+    }
 
-    const returnedBlog = await blogService.create(createdBlog);
-    setBlogs(blogs.concat(returnedBlog));
-    setTitle("");
-    setAuthor("");
-    setUrl("");
-  };
+    try {
+      // 1. Attempt to send the data to the backend
+      const returnedBlog = await blogService.create(createdBlog)
+
+      // 2. If successful, update the UI state and clear the form
+      setBlogs(blogs.concat(returnedBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+
+      // (Optional placeholder for 5.4 success notification)
+      console.log(`Added blog: ${returnedBlog.title}`)
+    } catch (exception) {
+      // 3. If the backend returns an error (e.g., 400 Bad Request), it jumps here instead of crashing
+      console.error('Failed to create blog', exception)
+
+      // (Optional placeholder for 5.4 error notification)
+      // alert("Error: Could not add blog. Make sure Title and URL are filled out.");
+    }
+  }
 
   if (user === null) {
     return (
@@ -88,7 +103,7 @@ const App = () => {
           <button type="submit">login</button>
         </form>
       </div>
-    );
+    )
   } else
     return (
       <div>
@@ -127,6 +142,6 @@ const App = () => {
           <Blog key={blog.id} blog={blog} />
         ))}
       </div>
-    );
-};
-export default App;
+    )
+}
+export default App
