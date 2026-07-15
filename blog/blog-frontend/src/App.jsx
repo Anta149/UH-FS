@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -45,33 +44,15 @@ const App = () => {
     setUser(null)
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault() // Fixed with ()
-
-    const createdBlog = {
-      title: title,
-      author: author,
-      url: url,
-    }
-
+  const addBlog = async (blogObject) => {
     try {
-      // 1. Attempt to send the data to the backend
-      const returnedBlog = await blogService.create(createdBlog)
+      const returnedBlog = await blogService.create(blogObject)
 
-      // 2. If successful, update the UI state and clear the form
       setBlogs(blogs.concat(returnedBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
 
-      // (Optional placeholder for 5.4 success notification)
       console.log(`Added blog: ${returnedBlog.title}`)
     } catch (exception) {
-      // 3. If the backend returns an error (e.g., 400 Bad Request), it jumps here instead of crashing
       console.error('Failed to create blog', exception)
-
-      // (Optional placeholder for 5.4 error notification)
-      // alert("Error: Could not add blog. Make sure Title and URL are filled out.");
     }
   }
 
@@ -109,34 +90,13 @@ const App = () => {
       <div>
         <h2>{user.name} logged in </h2>
         <button onClick={handleLogout}>logout</button>
-        <h2>Add new blog</h2>
-        <form onSubmit={handleCreateBlog}>
-          <label>
-            Title
-            <input
-              type="text"
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </label>
-          <label>
-            Author
-            <input
-              type="text"
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </label>
-          <label>
-            URL
-            <input
-              type="text"
-              value={url}
-              onChange={({ target }) => setUrl(target.value)}
-            />
-          </label>
-          <button type="submit">create</button>
-        </form>
+
+        <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+          <Togglable buttonLabel="New Blog">
+            <BlogForm createBlog={addBlog} />
+          </Togglable>
+        </div>
+
         <h2>blogs</h2>
         {blogs.map((blog) => (
           <Blog key={blog.id} blog={blog} />
