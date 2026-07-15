@@ -44,6 +44,17 @@ const App = () => {
     setUser(null)
   }
 
+  const updateBlogLike = async (blogObject) => {
+    const updatedBlog = {
+      ...blogObject,
+      likes: blogObject.likes + 1,
+      user: blogObject.user.id,
+    }
+
+    const returnedBlog = await blogService.update(blogObject.id, updatedBlog)
+    setBlogs(blogs.map((b) => (b.id === blogObject.id ? returnedBlog : b)))
+  }
+
   const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
@@ -98,9 +109,11 @@ const App = () => {
         </div>
 
         <h2>blogs</h2>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
+        {[...blogs]
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <Blog key={blog.id} blog={blog} handleLike={updateBlogLike} />
+          ))}
       </div>
     )
 }
