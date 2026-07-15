@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleLike, deleteBlogOf }) => {
   // 1. Create a local state to manage whether this specific card is expanded
   const [visible, setVisible] = useState(false)
 
@@ -55,6 +55,9 @@ const Blog = ({ blog, handleLike }) => {
           </button>
         </div>
         <div>Added by: {blog.user ? blog.user.name : 'Unknown User'}</div>
+        <button onClick={() => deleteBlogOf(blog.id, blog.title)}>
+          delete
+        </button>
       </div>
     </div>
   )

@@ -30,5 +30,9 @@ const update = async (id, newObject) => {
   return response.data
 }
 
-// Export all the service functions as an object
-export default { getAll, create, setToken, update }
+const remove = async (id) => {
+  const response = await axios.delete(`${baseUrl}/${id}`)
+  return response.data
+}
+
+export default { getAll, create, setToken, update, remove }
