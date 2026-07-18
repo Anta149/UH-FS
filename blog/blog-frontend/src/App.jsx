@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import blogService from '../services/blogs'
+import loginService from '../services/login'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState('success')
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -33,8 +36,12 @@ const App = () => {
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       setUsername('')
       setPassword('')
-    } catch {
-      console.log('wrong credentials')
+    } catch (exception) {
+      setNotificationMessage('Wrong username or password')
+      setNotificationType('error')
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
     }
   }
 
@@ -69,15 +76,27 @@ const App = () => {
 
       setBlogs(blogs.concat(returnedBlog))
 
-      console.log(`Added blog: ${returnedBlog.title}`)
+      setNotificationType('success')
+      setNotificationMessage(
+        `A new blog "${returnedBlog.title}" by ${returnedBlog.author} added!`,
+      )
+
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
     } catch (exception) {
-      console.error('Failed to create blog', exception)
+      setNotificationType('error')
+      setNotificationMessage('Failed to create a new blog post')
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
     }
   }
 
   if (user === null) {
     return (
       <div>
+        <Notification message={notificationMessage} type={notificationType} />
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -107,6 +126,7 @@ const App = () => {
   } else
     return (
       <div>
+        <Notification message={notificationMessage} type={notificationType} />
         <h2>{user.name} logged in </h2>
         <button onClick={handleLogout}>logout</button>
 

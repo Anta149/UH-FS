@@ -8,6 +8,11 @@ const loginRouter = require('./controllers/login')
 
 const app = express()
 
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
+
 mongoose.connect(config.MONGODB_URI, { family: 4 })
 
 app.use(express.json())
