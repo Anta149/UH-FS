@@ -1,14 +1,11 @@
-import Notification from './Notification'
+import { Link } from 'react-router-dom'
 import Togglable from './Togglable'
 import BlogForm from './BlogForm'
-import Blog from './Blog'
-import { Link } from 'react-router-dom'
+import Notification from './Notification'
 
 const BlogList = ({
   blogs,
-  deleteBlogOf,
   addBlog,
-  updateBlogLike,
   notificationMessage,
   notificationType,
 }) => {
@@ -21,17 +18,18 @@ const BlogList = ({
         </Togglable>
       </div>
 
-      <h2>blogs</h2>
-      {[...blogs]
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            handleLike={updateBlogLike}
-            deleteBlogOf={deleteBlogOf}
-          />
-        ))}
+      <h2>Blogs</h2>
+      <ul>
+        {[...blogs]
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <li key={blog.id}>
+              <Link to={`/blogs/${blog.id}`}>
+                {blog.title} by {blog.author}
+              </Link>
+            </li>
+          ))}
+      </ul>
     </div>
   )
 }

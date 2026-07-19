@@ -1,68 +1,34 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-
-const Blog = ({ blog, handleLike, deleteBlogOf }) => {
-  // 1. Create a local state to manage whether this specific card is expanded
-  const [visible, setVisible] = useState(false)
-
+const Blog = ({ blog, user, handleLike, deleteBlogOf }) => {
   if (!blog) {
     return null
   }
-  // 2. Add standard styling for the blog cards
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 10,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-    borderRadius: 5,
-  }
 
-  // 3. Define the inline display rules based on our visibility state
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  // 4. Toggle function to flip our state back and forth
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+  const isCreator = user && blog.user && user.id === blog.user.id
 
   return (
-    <div style={blogStyle}>
-      {/* View 1: Compact (Always visible by default, hidden when expanded) */}
-      <div style={hideWhenVisible}>
-        <span>
-          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link> - {blog.author}
-        </span>
-        <button onClick={toggleVisibility} style={{ marginLeft: 10 }}>
-          view
-        </button>
+    <div>
+      <h2>
+        {blog.title} by {blog.author}
+      </h2>
+      <div>
+        <a href={blog.url} target="_blank" rel="noopener noreferrer">
+          {blog.url}
+        </a>
       </div>
-
-      {/* View 2: Expanded (Hidden by default, shown when visible is true) */}
-      <div style={showWhenVisible}>
-        <div>
-          <strong>{blog.title}</strong> - {blog.author}
-          <button onClick={toggleVisibility} style={{ marginLeft: 10 }}>
-            hide
-          </button>
-        </div>
-        <div>
-          <a href={blog.url} target="_blank" rel="noopener noreferrer">
-            {blog.url}
-          </a>
-        </div>
-        <div>
-          likes {blog.likes}
+      <div>
+        likes {blog.likes}
+        {user && (
           <button onClick={() => handleLike(blog)} style={{ marginLeft: 10 }}>
             like
           </button>
-        </div>
-        <div>Added by: {blog.user ? blog.user.name : 'Unknown User'}</div>
+        )}
+      </div>
+      <div>Added by: {blog.user ? blog.user.name : 'Unknown User'}</div>
+      {isCreator && (
         <button onClick={() => deleteBlogOf(blog.id, blog.title)}>
           delete
         </button>
-      </div>
+      )}
     </div>
   )
 }

@@ -82,11 +82,14 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
       blogService.setToken(user.token)
+
+      console.log(user)
+
       setUser(user)
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       setUsername('')
       setPassword('')
-      navigate('/')
+      navigate('/blogs')
     } catch (exception) {
       setNotificationMessage('Wrong username or password')
       setNotificationType('error')
@@ -132,6 +135,7 @@ const App = () => {
             <Blog
               //key={blog.id}
               blog={blog}
+              user={user}
               handleLike={updateBlogLike}
               deleteBlogOf={deleteBlogOf}
             />
@@ -142,9 +146,7 @@ const App = () => {
           element={
             <BlogList
               blogs={blogs}
-              deleteBlogOf={deleteBlogOf}
               addBlog={addBlog}
-              updateBlogLike={updateBlogLike}
               notificationMessage={notificationMessage}
               notificationType={notificationType}
             />
