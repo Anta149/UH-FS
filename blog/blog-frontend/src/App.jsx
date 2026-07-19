@@ -51,6 +51,7 @@ const App = () => {
       blogService.remove(id).then(() => {
         setBlogs(blogs.filter((blog) => blog.id !== id))
       })
+      navigate('/blogs')
     }
   }
 
@@ -64,10 +65,10 @@ const App = () => {
       setNotificationMessage(
         `A new blog "${returnedBlog.title}" by ${returnedBlog.author} added!`,
       )
-
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
+      navigate('/blogs')
     } catch (exception) {
       setNotificationType('error')
       setNotificationMessage('Failed to create a new blog post')
@@ -113,9 +114,14 @@ const App = () => {
   return (
     <>
       <div>
+        <Link style={padding} to="/blogs">
+          blogs
+        </Link>
         {user ? (
           <>
-            <span>{user.name} logged in</span>
+            <Link style={padding} to="/newblog">
+              new blog
+            </Link>
             <button onClick={handleLogout}>logout</button>
           </>
         ) : (
@@ -123,9 +129,6 @@ const App = () => {
             login
           </Link>
         )}
-        <Link style={padding} to="/blogs">
-          blogs
-        </Link>
       </div>
 
       <Routes>
@@ -146,12 +149,12 @@ const App = () => {
           element={
             <BlogList
               blogs={blogs}
-              addBlog={addBlog}
               notificationMessage={notificationMessage}
               notificationType={notificationType}
             />
           }
         />
+        <Route path="/newblog" element={<BlogForm createBlog={addBlog} />} />
         <Route
           path="/login"
           element={

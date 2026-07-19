@@ -3,20 +3,10 @@ import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 import Notification from './Notification'
 
-const BlogList = ({
-  blogs,
-  addBlog,
-  notificationMessage,
-  notificationType,
-}) => {
+const BlogList = ({ blogs, notificationMessage, notificationType }) => {
   return (
     <div>
       <Notification message={notificationMessage} type={notificationType} />
-      <div style={{ marginTop: '10px', marginBottom: '10px' }}>
-        <Togglable buttonLabel="New Blog">
-          <BlogForm createBlog={addBlog} />
-        </Togglable>
-      </div>
 
       <h2>Blogs</h2>
       <ul>
