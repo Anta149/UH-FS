@@ -8,7 +8,7 @@ import Notification from './components/Notification'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import LoginForm from './components/LoginForm'
 import BlogList from './components/BlogList'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useMatch } from 'react-router-dom'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -18,6 +18,9 @@ const App = () => {
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [notificationType, setNotificationType] = useState('success')
   const navigate = useNavigate()
+
+  const match = useMatch('/blogs/:id')
+  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -117,14 +120,25 @@ const App = () => {
             login
           </Link>
         )}
-        <Link style={padding} to="/">
+        <Link style={padding} to="/blogs">
           blogs
         </Link>
       </div>
 
       <Routes>
         <Route
-          path="/"
+          path="/blogs/:id"
+          element={
+            <Blog
+              //key={blog.id}
+              blog={blog}
+              handleLike={updateBlogLike}
+              deleteBlogOf={deleteBlogOf}
+            />
+          }
+        />
+        <Route
+          path="/blogs"
           element={
             <BlogList
               blogs={blogs}

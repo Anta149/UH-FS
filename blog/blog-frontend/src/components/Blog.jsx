@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog, handleLike, deleteBlogOf }) => {
   // 1. Create a local state to manage whether this specific card is expanded
   const [visible, setVisible] = useState(false)
 
+  if (!blog) {
+    return null
+  }
   // 2. Add standard styling for the blog cards
   const blogStyle = {
     paddingTop: 10,
@@ -28,7 +32,7 @@ const Blog = ({ blog, handleLike, deleteBlogOf }) => {
       {/* View 1: Compact (Always visible by default, hidden when expanded) */}
       <div style={hideWhenVisible}>
         <span>
-          {blog.title} - {blog.author}
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link> - {blog.author}
         </span>
         <button onClick={toggleVisibility} style={{ marginLeft: 10 }}>
           view
